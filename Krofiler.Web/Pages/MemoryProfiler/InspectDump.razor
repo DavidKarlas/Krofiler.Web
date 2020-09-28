@@ -1,0 +1,22 @@
+﻿@page "/memoryprofiler/{PID:int}/dump/{ID:int}"
+
+@using Krofiler.Web.Data
+@inject DumpInspectorService DumpInspectorService
+
+<h1>Memory Profiler - @PID - Dump @ID</h1>
+
+@code {
+	[Parameter]
+	public int PID { get; set; }
+
+	[Parameter]
+	public int ID { get; set; }
+
+	protected override Task OnInitializedAsync()
+	{
+		@*DumpInspectorService*@
+
+
+		return Task.CompletedTask;
+	}
+}

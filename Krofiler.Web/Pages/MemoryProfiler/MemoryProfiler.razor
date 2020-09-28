@@ -1,0 +1,63 @@
+﻿@page "/memoryprofiler/{PID:int}"
+
+@using Krofiler.Web.Data
+@inject DumpCollectingService DumpCollectingService
+
+<h1>Memory Profiler - @PID</h1>
+
+<h2>TODO, Graph that shows memory over time for this process</h2>
+@{
+    // Probaby use https://github.com/mariusmuntean/ChartJs.Blazor
+}
+
+<button class="btn btn-primary" @onclick="TakeDump">Take dump</button>
+
+@if (dumps == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Creation Time</th>
+                <th>Commited Memory</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < dumps.Count; i++)
+            {
+                var dump = dumps[i];
+                <tr>
+                    <td>@i</td>
+                    <td>@dump.CreationTime</td>
+                    <td>@dump.CommitedMemory</td>
+                    <td><a href="memoryprofiler/@PID/dump/@i">Inspect</a> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int PID { get; set; }
+
+    private List<DumpInfo> dumps;
+
+    protected override Task OnInitializedAsync()
+    {
+        dumps = DumpCollectingService.GetDumps(PID);
+        return Task.CompletedTask;
+    }
+
+    private void TakeDump()
+    {
+        var dump = DumpCollectingService.CreateNewDump(PID);
+        dumps = DumpCollectingService.GetDumps(PID);
+
+    }
+}

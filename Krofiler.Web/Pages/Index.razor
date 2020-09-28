@@ -1,7 +1,47 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@using Krofiler.Web.Data
+@inject ProcessListingService ProcessListingService
 
-Welcome to your new app.
+@if (processes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>PID</th>
+                <th>Arguments</th>
+                <th>StartTime</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var process in processes)
+            {
+                <tr>
+                    <td>@process.Name</td>
+                    <td>@process.PID</td>
+                    <td>@process.Arguments</td>
+                    <td>@process.StartTime</td>
+                    <td><a href="memoryprofiler/@process.PID">Memory Profiler</a> <a href="cpuprofiler/@process.PID">CPU Profiler</a>  <a href="counters/@process.PID">Counters</a> <a href="tracing/@process.PID">Tracing</a> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    private ProcessInfo[] processes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        processes = await ProcessListingService.GetAllProcessesInfo();
+    }
+}
+
+
+
