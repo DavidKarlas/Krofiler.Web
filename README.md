@@ -7,4 +7,6 @@ From that website(which is convinently crossplatform) user can make dumps, compa
 
 Later another tool I would like to add is something similar to os_signpost view from XCode Instruments.
 
+CPU Sampling with Flamegraph view.
+
 ...
