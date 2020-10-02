@@ -18,9 +18,9 @@ namespace Krofiler.Web.Data
 
 		public DumpInfo CreateNewDump(int pid)
 		{
-			var client = new DiagnosticsClient(pid);
 			var tmpFile = Path.GetTempFileName();
-			client.WriteDump(DumpType.WithHeap, tmpFile);
+			var dumper = new Dumper();
+			dumper.Collect(pid, tmpFile, true, Dumper.DumpTypeOption.Heap);
 
 			var list = Dumps.GetOrAdd(pid, new List<DumpInfo>());
 			var parsedDump = ParseDump(tmpFile);

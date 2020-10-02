@@ -19,8 +19,10 @@ namespace Krofiler.Web.Data
 		{
 			var sw = Stopwatch.StartNew();
 			try {
-				if (getpgid(processId) < 0)
-					return null;
+				// GetProcessById can be really slow for processes that already exited on non-windows platform...
+				if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+					if (getpgid(processId) < 0)
+						return null;
 				return Process.GetProcessById(processId);
 			}
 			catch (ArgumentException) {
